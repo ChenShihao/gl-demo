@@ -6,7 +6,7 @@
   "scripts": {
     "bundle:drag2d": "rm -rf drag2d/dist && esbuild drag2d/index.ts --outfile=drag2d/dist/index.js --bundle --minify",
     "start:drag2d": "npm run bundle:drag2d -- --sourcemap --watch --servedir=drag2d",
-    "bundle:webgpu": "rm -rf webgpu/dist && esbuild webgpu/index.ts --outfile=webgpu/dist/index.js --bundle --minify",
+    "bundle:webgpu": "rm -rf webgpu/dist && esbuild webgpu/index.ts --outfile=webgpu/dist/index.js --bundle --minify --loader:.wgsl=text",
     "start:webgpu": "npm run bundle:webgpu -- --sourcemap --watch --servedir=webgpu"
   },
   "dependencies": {
