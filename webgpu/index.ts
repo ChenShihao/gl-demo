@@ -102,14 +102,36 @@ const bootstrap = async () => {
       },
     ],
   });
+
+  const GRID_SIZE = 4;
+  const uniformArray = new Float32Array([GRID_SIZE, GRID_SIZE]);
+  const uniformBuffer = device.createBuffer({
+    label: "Grid Uniforms",
+    size: uniformArray.byteLength,
+    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+  });
+  device.queue.writeBuffer(uniformBuffer, 0, uniformArray);
+
+  const bindGroup = device.createBindGroup({
+    label: "Cell renderer bind group",
+    layout: cellPipeline.getBindGroupLayout(0),
+    entries: [
+      {
+        binding: 0,
+        resource: { buffer: uniformBuffer },
+      },
+    ],
+  });
+
   pass.setPipeline(cellPipeline);
   pass.setVertexBuffer(0, vertexBuffer);
-  pass.draw(vertices.length / 2);
+  pass.setBindGroup(0, bindGroup);
+  pass.draw(vertices.length / 2, GRID_SIZE * GRID_SIZE);
   pass.end();
 
   device.queue.submit([encoder.finish()]);
 };
 
-(async () => {
+void (async () => {
   await bootstrap();
 })();
