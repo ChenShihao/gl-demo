@@ -1,5 +1,4 @@
-import FragmentShader from "./wgsl/fragment.wgsl";
-import VertexShader from "./wgsl/vertex.wgsl";
+import Shader from "./index.wgsl";
 
 const bootstrap = async () => {
   if (!navigator.gpu) {
@@ -74,7 +73,7 @@ const bootstrap = async () => {
 
   const cellShaderModule = device.createShaderModule({
     label: "Cell Shader",
-    code: [VertexShader, FragmentShader].join("\n"),
+    code: Shader,
   });
 
   const cellPipeline = device.createRenderPipeline({
@@ -103,7 +102,7 @@ const bootstrap = async () => {
     ],
   });
 
-  const GRID_SIZE = 4;
+  const GRID_SIZE = 32;
   const uniformArray = new Float32Array([GRID_SIZE, GRID_SIZE]);
   const uniformBuffer = device.createBuffer({
     label: "Grid Uniforms",
