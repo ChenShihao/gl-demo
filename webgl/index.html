@@ -9,9 +9,26 @@
         padding: 0;
         margin: 0 auto;
       }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        background: #333;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #canvas {
+        border: 1px solid #ddd;
+      }
     </style>
   </head>
   <body>
-    <canvas id="canvas" width="640" height="480"></canvas>
+    <canvas id="canvas" width="640" height="640"></canvas>
   </body>
 </html>
