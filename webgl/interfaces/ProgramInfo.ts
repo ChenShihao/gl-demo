@@ -1,11 +1,12 @@
 interface AttribLocations {
   vertexPosition: GLint;
-  vertexColor: GLint;
+  texture: GLint;
 }
 
 interface UniformLocations {
   projectionMatrix: WebGLUniformLocation | null;
   modelViewMatrix: WebGLUniformLocation | null;
+  uSampler: WebGLUniformLocation | null;
 }
 
 export interface ProgramInfo {

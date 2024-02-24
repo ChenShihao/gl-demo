@@ -8,7 +8,7 @@
     "start:drag2d": "npm run bundle:drag2d -- --sourcemap --watch --servedir=drag2d",
     "bundle:webgpu": "rm -rf webgpu/dist && esbuild webgpu/index.ts --outfile=webgpu/dist/index.js --bundle --minify --loader:.wgsl=text",
     "start:webgpu": "npm run bundle:webgpu -- --sourcemap --watch --servedir=webgpu",
-    "bundle:webgl": "rm -rf webgl/dist && esbuild webgl/index.ts --outfile=webgl/dist/index.js --bundle --minify --loader:.glsl=text",
+    "bundle:webgl": "rm -rf webgl/dist && esbuild webgl/index.ts --outfile=webgl/dist/index.js --bundle --minify --loader:.glsl=text --loader:.jpg=file",
     "start:webgl": "npm run bundle:webgl -- --sourcemap --watch --servedir=webgl"
   },
   "dependencies": {

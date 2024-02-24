@@ -1,11 +1,13 @@
+import { type ProgramInfo } from "../interfaces/ProgramInfo";
+
 export const initProgramInfo = (
   glContext: WebGLRenderingContext,
   glProgram: WebGLProgram,
-) => ({
+): ProgramInfo => ({
   program: glProgram,
   attribLocations: {
     vertexPosition: glContext.getAttribLocation(glProgram, "aVertexPosition"),
-    vertexColor: glContext.getAttribLocation(glProgram, "aVertexColor"),
+    texture: glContext.getAttribLocation(glProgram, "aTexture"),
   },
   uniformLocations: {
     projectionMatrix: glContext.getUniformLocation(
@@ -16,5 +18,6 @@ export const initProgramInfo = (
       glProgram,
       "uModelViewMatrix",
     ),
+    uSampler: glContext.getUniformLocation(glProgram, "uSampler"),
   },
 });

@@ -1,64 +1,46 @@
 import { mat4 } from "gl-matrix";
+import { type BufferItem } from "../interfaces/BufferItem";
 import { type ProgramInfo } from "../interfaces/ProgramInfo";
-import { type BufferItem } from "./initBufferItem";
 
 const setPositionAttribute = (
   glContext: WebGLRenderingContext,
   bufferItem: BufferItem,
   programInfo: ProgramInfo,
 ) => {
-  const numComponents = 3;
-  const type = glContext.FLOAT;
-  const normalize = false;
-  const stride = 0;
-  const offset = 0;
-
   glContext.bindBuffer(glContext.ARRAY_BUFFER, bufferItem.position);
   glContext.vertexAttribPointer(
     programInfo.attribLocations.vertexPosition,
-    numComponents,
-    type,
-    normalize,
-    stride,
-    offset,
+    3,
+    glContext.FLOAT,
+    false,
+    0,
+    0,
   );
   glContext.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
 };
 
-const setColorAttribute = (
+const setTextureAttribute = (
   glContext: WebGLRenderingContext,
   bufferItem: BufferItem,
   programInfo: ProgramInfo,
 ) => {
-  const numComponents = 4;
-  const type = glContext.FLOAT;
-  const normalize = false;
-  const stride = 0;
-  const offset = 0;
-
-  glContext.bindBuffer(glContext.ARRAY_BUFFER, bufferItem.color);
+  glContext.bindBuffer(glContext.ARRAY_BUFFER, bufferItem.texture);
   glContext.vertexAttribPointer(
-    programInfo.attribLocations.vertexColor,
-    numComponents,
-    type,
-    normalize,
-    stride,
-    offset,
+    programInfo.attribLocations.texture,
+    2,
+    glContext.FLOAT,
+    false,
+    0,
+    0,
   );
-  glContext.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
-};
-
-const setIndices = (
-  glContext: WebGLRenderingContext,
-  bufferItem: BufferItem,
-) => {
-  glContext.bindBuffer(glContext.ELEMENT_ARRAY_BUFFER, bufferItem.indices);
+  glContext.enableVertexAttribArray(programInfo.attribLocations.texture);
 };
 
 export const drawScene = (
   glContext: WebGLRenderingContext,
   bufferItem: BufferItem,
   programInfo: ProgramInfo,
+  texture: WebGLTexture | null,
   cubeRotation = 0,
 ) => {
   glContext.clearColor(0, 0, 0, 1);
@@ -81,8 +63,9 @@ export const drawScene = (
   mat4.rotate(modelViewMatrix, modelViewMatrix, cubeRotation * 0.3, [0, 0, 1]);
 
   setPositionAttribute(glContext, bufferItem, programInfo);
-  setColorAttribute(glContext, bufferItem, programInfo);
-  setIndices(glContext, bufferItem);
+  setTextureAttribute(glContext, bufferItem, programInfo);
+
+  glContext.bindBuffer(glContext.ELEMENT_ARRAY_BUFFER, bufferItem.indices);
 
   glContext.useProgram(programInfo.program);
   glContext.uniformMatrix4fv(
@@ -95,6 +78,10 @@ export const drawScene = (
     false,
     modelViewMatrix,
   );
+
+  glContext.activeTexture(glContext.TEXTURE0);
+  glContext.bindTexture(glContext.TEXTURE_2D, texture);
+  glContext.uniform1i(programInfo.uniformLocations.uSampler, 0);
 
   glContext.drawElements(glContext.TRIANGLES, 36, glContext.UNSIGNED_SHORT, 0);
 };
