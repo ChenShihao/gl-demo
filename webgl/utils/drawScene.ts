@@ -7,7 +7,7 @@ const setPositionAttribute = (
   bufferItem: BufferItem,
   programInfo: ProgramInfo,
 ) => {
-  const numComponents = 2;
+  const numComponents = 3;
   const type = glContext.FLOAT;
   const normalize = false;
   const stride = 0;
@@ -25,7 +25,7 @@ const setPositionAttribute = (
   glContext.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
 };
 
-const setPositionColor = (
+const setColorAttribute = (
   glContext: WebGLRenderingContext,
   bufferItem: BufferItem,
   programInfo: ProgramInfo,
@@ -48,11 +48,18 @@ const setPositionColor = (
   glContext.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
 };
 
+const setIndices = (
+  glContext: WebGLRenderingContext,
+  bufferItem: BufferItem,
+) => {
+  glContext.bindBuffer(glContext.ELEMENT_ARRAY_BUFFER, bufferItem.indices);
+};
+
 export const drawScene = (
   glContext: WebGLRenderingContext,
   bufferItem: BufferItem,
   programInfo: ProgramInfo,
-  squareRotation = 0,
+  cubeRotation = 0,
 ) => {
   glContext.clearColor(0, 0, 0, 1);
   glContext.clearDepth(1);
@@ -61,21 +68,21 @@ export const drawScene = (
 
   glContext.clear(glContext.COLOR_BUFFER_BIT | glContext.DEPTH_BUFFER_BIT);
 
-  const fieldOfView = (45 * Math.PI) / 180;
   const canvas = glContext.canvas as HTMLCanvasElement;
   const aspect = canvas.clientWidth / canvas.clientHeight;
-  const zNear = 0.1;
-  const zFar = 100.0;
 
   const projectionMatrix = mat4.create();
-  mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
+  mat4.perspective(projectionMatrix, (45 * Math.PI) / 180, aspect, 0.1, 100.0);
 
   const modelViewMatrix = mat4.create();
   mat4.translate(modelViewMatrix, modelViewMatrix, [-0.0, 0.0, -6.0]);
-  mat4.rotate(modelViewMatrix, modelViewMatrix, squareRotation, [0, 0, 1]);
+  mat4.rotate(modelViewMatrix, modelViewMatrix, cubeRotation, [1, 0, 0]);
+  mat4.rotate(modelViewMatrix, modelViewMatrix, cubeRotation * 0.7, [0, 1, 0]);
+  mat4.rotate(modelViewMatrix, modelViewMatrix, cubeRotation * 0.3, [0, 0, 1]);
 
   setPositionAttribute(glContext, bufferItem, programInfo);
-  setPositionColor(glContext, bufferItem, programInfo);
+  setColorAttribute(glContext, bufferItem, programInfo);
+  setIndices(glContext, bufferItem);
 
   glContext.useProgram(programInfo.program);
   glContext.uniformMatrix4fv(
@@ -89,7 +96,5 @@ export const drawScene = (
     modelViewMatrix,
   );
 
-  const offset = 0;
-  const vertexCount = 4;
-  glContext.drawArrays(glContext.TRIANGLE_STRIP, offset, vertexCount);
+  glContext.drawElements(glContext.TRIANGLES, 36, glContext.UNSIGNED_SHORT, 0);
 };
