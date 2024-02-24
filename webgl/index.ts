@@ -19,7 +19,15 @@ const bootstrap = () => {
   const programInfo = initProgramInfo(glContext, glProgram);
   const bufferItem = initBufferItem(glContext);
 
-  drawScene(glContext, bufferItem, programInfo);
+  const render = (now: number) => {
+    const nowSec = now / 1000;
+
+    drawScene(glContext, bufferItem, programInfo, nowSec);
+
+    requestAnimationFrame(render);
+  };
+
+  requestAnimationFrame(render);
 };
 
 bootstrap();

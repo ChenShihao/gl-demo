@@ -52,6 +52,7 @@ export const drawScene = (
   glContext: WebGLRenderingContext,
   bufferItem: BufferItem,
   programInfo: ProgramInfo,
+  squareRotation = 0,
 ) => {
   glContext.clearColor(0, 0, 0, 1);
   glContext.clearDepth(1);
@@ -71,6 +72,7 @@ export const drawScene = (
 
   const modelViewMatrix = mat4.create();
   mat4.translate(modelViewMatrix, modelViewMatrix, [-0.0, 0.0, -6.0]);
+  mat4.rotate(modelViewMatrix, modelViewMatrix, squareRotation, [0, 0, 1]);
 
   setPositionAttribute(glContext, bufferItem, programInfo);
   setPositionColor(glContext, bufferItem, programInfo);
