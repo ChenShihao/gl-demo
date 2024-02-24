@@ -1,5 +1,6 @@
 interface AttribLocations {
   vertexPosition: GLint;
+  vertexColor: GLint;
 }
 
 interface UniformLocations {

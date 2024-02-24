@@ -1,10 +1,10 @@
 import "../common/reload";
 import fragmentShader from "./glsl/fragment.glsl";
 import vertexShader from "./glsl/vertex.glsl";
-import { type ProgramInfo } from "./interfaces/ProgramInfo.js";
 import { drawScene } from "./utils/drawScene.js";
-import { initBuffers } from "./utils/initBuffers.js";
+import { initBufferItem } from "./utils/initBufferItem";
 import { initProgram } from "./utils/initProgram";
+import { initProgramInfo } from "./utils/initProgramInfo";
 
 const bootstrap = () => {
   const canvas = document.querySelector("#canvas") as HTMLCanvasElement;
@@ -15,29 +15,11 @@ const bootstrap = () => {
     return;
   }
 
-  const shaderProgram = initProgram(glContext, vertexShader, fragmentShader);
-  const programInfo: ProgramInfo = {
-    program: shaderProgram,
-    attribLocations: {
-      vertexPosition: glContext.getAttribLocation(
-        shaderProgram,
-        "aVertexPosition",
-      ),
-    },
-    uniformLocations: {
-      projectionMatrix: glContext.getUniformLocation(
-        shaderProgram,
-        "uProjectionMatrix",
-      ),
-      modelViewMatrix: glContext.getUniformLocation(
-        shaderProgram,
-        "uModelViewMatrix",
-      ),
-    },
-  };
-  const buffers = initBuffers(glContext);
+  const glProgram = initProgram(glContext, vertexShader, fragmentShader);
+  const programInfo = initProgramInfo(glContext, glProgram);
+  const bufferItem = initBufferItem(glContext);
 
-  drawScene(glContext, programInfo, buffers);
+  drawScene(glContext, bufferItem, programInfo);
 };
 
 bootstrap();

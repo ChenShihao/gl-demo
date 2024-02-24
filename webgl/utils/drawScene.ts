@@ -1,10 +1,10 @@
 import { mat4 } from "gl-matrix";
 import { type ProgramInfo } from "../interfaces/ProgramInfo";
-import { type BufferItem } from "./initBuffers";
+import { type BufferItem } from "./initBufferItem";
 
 const setPositionAttribute = (
   glContext: WebGLRenderingContext,
-  buffers: BufferItem,
+  bufferItem: BufferItem,
   programInfo: ProgramInfo,
 ) => {
   const numComponents = 2;
@@ -13,7 +13,7 @@ const setPositionAttribute = (
   const stride = 0;
   const offset = 0;
 
-  glContext.bindBuffer(glContext.ARRAY_BUFFER, buffers.position);
+  glContext.bindBuffer(glContext.ARRAY_BUFFER, bufferItem.position);
   glContext.vertexAttribPointer(
     programInfo.attribLocations.vertexPosition,
     numComponents,
@@ -25,10 +25,33 @@ const setPositionAttribute = (
   glContext.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
 };
 
+const setPositionColor = (
+  glContext: WebGLRenderingContext,
+  bufferItem: BufferItem,
+  programInfo: ProgramInfo,
+) => {
+  const numComponents = 4;
+  const type = glContext.FLOAT;
+  const normalize = false;
+  const stride = 0;
+  const offset = 0;
+
+  glContext.bindBuffer(glContext.ARRAY_BUFFER, bufferItem.color);
+  glContext.vertexAttribPointer(
+    programInfo.attribLocations.vertexColor,
+    numComponents,
+    type,
+    normalize,
+    stride,
+    offset,
+  );
+  glContext.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
+};
+
 export const drawScene = (
   glContext: WebGLRenderingContext,
+  bufferItem: BufferItem,
   programInfo: ProgramInfo,
-  buffers: BufferItem,
 ) => {
   glContext.clearColor(0, 0, 0, 1);
   glContext.clearDepth(1);
@@ -49,7 +72,8 @@ export const drawScene = (
   const modelViewMatrix = mat4.create();
   mat4.translate(modelViewMatrix, modelViewMatrix, [-0.0, 0.0, -6.0]);
 
-  setPositionAttribute(glContext, buffers, programInfo);
+  setPositionAttribute(glContext, bufferItem, programInfo);
+  setPositionColor(glContext, bufferItem, programInfo);
 
   glContext.useProgram(programInfo.program);
   glContext.uniformMatrix4fv(
