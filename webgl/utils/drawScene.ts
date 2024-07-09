@@ -36,13 +36,29 @@ const setTextureAttribute = (
   glContext.enableVertexAttribArray(programInfo.attribLocations.texture);
 };
 
-export const drawScene = (
-  glContext: WebGLRenderingContext,
-  bufferItem: BufferItem,
-  programInfo: ProgramInfo,
-  texture: WebGLTexture | null,
-  cubeRotation = 0,
-) => {
+export interface DrawSceneParams {
+  glContext: WebGLRenderingContext;
+  bufferItem: BufferItem;
+  programInfo: ProgramInfo;
+  texture: WebGLTexture | null;
+  transformState: TransformState;
+}
+
+export interface TransformState {
+  cameraDistance: number;
+  translateX: number;
+  translateY: number;
+  rotateX: number;
+  rotateY: number;
+}
+
+export const drawScene = ({
+  glContext,
+  bufferItem,
+  programInfo,
+  texture,
+  transformState,
+}: DrawSceneParams) => {
   glContext.clearColor(0, 0, 0, 1);
   glContext.clearDepth(1);
   glContext.enable(glContext.DEPTH_TEST);
@@ -57,10 +73,24 @@ export const drawScene = (
   mat4.perspective(projectionMatrix, (45 * Math.PI) / 180, aspect, 0.1, 100.0);
 
   const modelViewMatrix = mat4.create();
-  mat4.translate(modelViewMatrix, modelViewMatrix, [-0.0, 0.0, -6.0]);
-  mat4.rotate(modelViewMatrix, modelViewMatrix, cubeRotation, [1, 0, 0]);
-  mat4.rotate(modelViewMatrix, modelViewMatrix, cubeRotation * 0.7, [0, 1, 0]);
-  mat4.rotate(modelViewMatrix, modelViewMatrix, cubeRotation * 0.3, [0, 0, 1]);
+  mat4.translate(modelViewMatrix, modelViewMatrix, [
+    transformState.translateX,
+    transformState.translateY,
+    -transformState.cameraDistance,
+  ]);
+  mat4.rotate(
+    modelViewMatrix,
+    modelViewMatrix,
+    transformState.rotateX,
+    [1, 0, 0],
+  );
+  mat4.rotate(
+    modelViewMatrix,
+    modelViewMatrix,
+    transformState.rotateY,
+    [0, 1, 0],
+  );
+  mat4.rotate(modelViewMatrix, modelViewMatrix, 0, [0, 0, 1]);
 
   setPositionAttribute(glContext, bufferItem, programInfo);
   setTextureAttribute(glContext, bufferItem, programInfo);
