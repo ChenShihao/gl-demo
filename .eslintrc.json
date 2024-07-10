@@ -3,12 +3,16 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["standard-with-typescript", "plugin:prettier/recommended"],
+  "extends": [
+    "standard-with-typescript",
+    "plugin:prettier/recommended",
+    "plugin:@atlaskit/design-system/recommended"
+  ],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["unused-imports"],
+  "plugins": ["unused-imports", "@atlaskit/eslint-plugin-design-system"],
   "rules": {
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "unused-imports/no-unused-imports": "warn",

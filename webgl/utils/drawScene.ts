@@ -1,4 +1,4 @@
-import { mat4 } from "gl-matrix";
+import { glMatrix, mat4 } from "gl-matrix";
 import { type BufferItem } from "../interfaces/BufferItem";
 import { type ProgramInfo } from "../interfaces/ProgramInfo";
 
@@ -50,6 +50,7 @@ export interface TransformState {
   translateY: number;
   rotateX: number;
   rotateY: number;
+  fovDegree: number;
 }
 
 export const drawScene = ({
@@ -70,7 +71,13 @@ export const drawScene = ({
   const aspect = canvas.clientWidth / canvas.clientHeight;
 
   const projectionMatrix = mat4.create();
-  mat4.perspective(projectionMatrix, (45 * Math.PI) / 180, aspect, 0.1, 100.0);
+  mat4.perspective(
+    projectionMatrix,
+    glMatrix.toRadian(transformState.fovDegree),
+    aspect,
+    0.1,
+    100.0,
+  );
 
   const modelViewMatrix = mat4.create();
   mat4.translate(modelViewMatrix, modelViewMatrix, [

@@ -8,18 +8,26 @@
     "start:drag2d": "npm run bundle:drag2d -- --sourcemap --watch --servedir=drag2d",
     "bundle:webgpu": "rm -rf webgpu/dist && esbuild webgpu/index.ts --outfile=webgpu/dist/index.js --bundle --minify --loader:.wgsl=text",
     "start:webgpu": "npm run bundle:webgpu -- --sourcemap --watch --servedir=webgpu",
-    "bundle:webgl": "rm -rf webgl/dist && esbuild webgl/index.ts --outfile=webgl/dist/index.js --bundle --minify --loader:.glsl=text --loader:.jpg=file",
+    "bundle:webgl": "rm -rf webgl/dist && esbuild webgl/index.tsx --outfile=webgl/dist/index.js --bundle --minify --loader:.glsl=text --loader:.jpg=file",
     "start:webgl": "npm run bundle:webgl -- --sourcemap --watch --servedir=webgl",
     "bundle:threejs": "rm -rf threejs/dist && esbuild threejs/index.ts --outfile=threejs/dist/index.js --bundle --minify",
     "start:threejs": "npm run bundle:threejs -- --sourcemap --watch --servedir=threejs"
   },
   "dependencies": {
+    "@atlaskit/css-reset": "^6.9.1",
+    "@atlaskit/range": "^7.3.0",
+    "@atlaskit/tokens": "^1.53.2",
     "gl-matrix": "^3.4.3",
     "lodash-es": "^4.17.21",
-    "three": "^0.162.0"
+    "react": "18.2",
+    "react-dom": "18.2",
+    "three": "^0.166.1"
   },
   "devDependencies": {
+    "@atlaskit/eslint-plugin-design-system": "^10.10.1",
     "@types/lodash-es": "^4.17.9",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
     "@types/three": "^0.161.2",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@webgpu/types": "^0.1.37",
