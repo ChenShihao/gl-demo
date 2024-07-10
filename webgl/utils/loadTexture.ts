@@ -60,6 +60,7 @@ export const loadTexture = (glContext: WebGLRenderingContext, url: string) => {
   };
 
   image.src = url;
+  image.crossOrigin = "anonymous";
 
   return texture;
 };
