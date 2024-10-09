@@ -2,9 +2,11 @@ import { throttle } from "lodash-es";
 
 const initCanvasSize = throttle(() => {
   const canvas = getCanvas();
+  const context = getContext();
   const clientRect = canvas.getBoundingClientRect();
-  canvas.width = clientRect.width;
-  canvas.height = clientRect.height;
+  canvas.width = clientRect.width * devicePixelRatio;
+  canvas.height = clientRect.height * devicePixelRatio;
+  context.scale(devicePixelRatio, devicePixelRatio);
 }, 100);
 
 const drawBackground = () => {
@@ -131,14 +133,14 @@ const bootstrap = () => {
 
     const isPointInLine = context.isPointInStroke(
       lineState.line,
-      event.offsetX,
-      event.offsetY,
+      event.offsetX * devicePixelRatio,
+      event.offsetY * devicePixelRatio,
     );
 
     const isPointInCircle = context.isPointInPath(
       circleState.circle,
-      event.offsetX,
-      event.offsetY,
+      event.offsetX * devicePixelRatio,
+      event.offsetY * devicePixelRatio,
     );
 
     canvas.style.cursor =
@@ -184,8 +186,8 @@ const bootstrap = () => {
   canvas.addEventListener("mousedown", (event: MouseEvent) => {
     const isPointInCircle = context.isPointInPath(
       circleState.circle,
-      event.offsetX,
-      event.offsetY,
+      event.offsetX * devicePixelRatio,
+      event.offsetY * devicePixelRatio,
     );
 
     if (isPointInCircle) {
@@ -198,8 +200,8 @@ const bootstrap = () => {
 
     const isPointInLine = context.isPointInStroke(
       lineState.line,
-      event.offsetX,
-      event.offsetY,
+      event.offsetX * devicePixelRatio,
+      event.offsetY * devicePixelRatio,
     );
 
     if (isPointInLine) {
@@ -217,4 +219,6 @@ const bootstrap = () => {
   addEventListener("resize", initCanvasSize);
 };
 
-addEventListener("load", () => bootstrap());
+addEventListener("load", () => {
+  bootstrap();
+});
